@@ -28,11 +28,11 @@ function Navbar() {
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   return (
-    <nav className="sticky top-0 z-50 bg-white shadow">
-      <div className="flex items-center justify-between px-6 md:px-8 py-4">
-        <div className="flex items-center space-x-2">
+    <nav className="sticky top-0 z-50 bg-white shadow-sm border-b border-gray-100">
+      <div className="max-w-7xl mx-auto flex items-center justify-between px-6 md:px-8 py-4">
+        <div className="flex items-center space-x-3">
           <img src={logo} alt="FreshDairy Logo" className="w-10 h-10" />
-          <span className="font-bold text-xl text-gray-800">FreshDairy</span>
+          <span className="font-bold text-2xl text-gray-800 tracking-tight">FreshDairy</span>
         </div>
 
         {/* Desktop Menu */}
