@@ -3,11 +3,11 @@ import logo from '../assets/logo.png';
 
 function Footer() {
   return (
-    <footer className="bg-green-600 text-white px-16 py-10">
+    <footer className="bg-green-600 text-white px-6 md:px-16 py-10">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
         <div>
           <div className="flex items-center space-x-2 mb-2">
-            <img src={logo} alt="FreshDairy Logo" className="w-8 h-8"/>
+            <img src={logo} alt="FreshDairy Logo" className="w-8 h-8" />
             <span className="font-bold text-lg">FreshDairy</span>
           </div>
           <p className="text-sm">

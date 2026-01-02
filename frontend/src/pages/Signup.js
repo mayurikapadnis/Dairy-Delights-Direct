@@ -40,7 +40,12 @@ function Signup() {
       <div className="flex flex-col items-center py-20 bg-gray-50 min-h-screen">
         <div className="bg-white rounded p-10 shadow-lg w-full max-w-md">
           <div className="flex space-x-2 mb-8">
-            <button className="w-1/2 py-2 rounded bg-gray-100">Login</button>
+            <button
+              onClick={() => navigate('/login')}
+              className="w-1/2 py-2 rounded bg-gray-100"
+            >
+              Login
+            </button>
             <button className="w-1/2 py-2 rounded bg-green-600 text-white">Sign Up</button>
           </div>
           <form onSubmit={handleSubmit}>

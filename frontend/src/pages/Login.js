@@ -41,7 +41,12 @@ function Login() {
         <div className="bg-white rounded p-10 shadow-lg w-full max-w-md">
           <div className="flex space-x-2 mb-8">
             <button className="w-1/2 bg-gray-100 py-2 rounded">Login</button>
-            <button className="w-1/2 py-2 rounded bg-green-50 text-green-800">Sign Up</button>
+            <button
+              onClick={() => navigate('/signup')}
+              className="w-1/2 py-2 rounded bg-green-50 text-green-800"
+            >
+              Sign Up
+            </button>
           </div>
           <form onSubmit={handleSubmit}>
             <h2 className="text-2xl font-bold mb-6 text-center">Welcome Back</h2>

@@ -5,7 +5,7 @@ import { ShieldCheck, Truck, Award } from 'lucide-react';
 function Hero() {
   return (
     <section
-      className="relative h-[450px] flex items-center"
+      className="relative h-auto md:h-[450px] flex items-center py-16 md:py-0"
       style={{
         backgroundImage: `url(${heroBg})`,
         backgroundSize: 'cover',
@@ -13,22 +13,22 @@ function Hero() {
       }}
     >
       <div className="absolute inset-0 bg-green-900 bg-opacity-40"></div>
-      <div className="relative z-10 px-16">
-        <h1 className="text-white font-bold text-5xl mb-4">
-          Fresh Dairy <br />Delivered Daily
+      <div className="relative z-10 px-6 md:px-16 w-full">
+        <h1 className="text-white font-bold text-3xl md:text-5xl mb-4 leading-tight">
+          Fresh Dairy <br className="hidden md:block" />Delivered Daily
         </h1>
-        <p className="text-white text-lg mb-8">
+        <p className="text-white text-base md:text-lg mb-8 max-w-lg">
           Experience the purest taste of farm-fresh dairy products, delivered straight from our organic farm to your doorstep.
         </p>
-        <div className="flex space-x-4">
-          <button className="bg-white text-green-700 font-semibold rounded px-8 py-3 shadow border hover:bg-green-50 transition">
+        <div className="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-4 w-full md:w-auto">
+          <button className="bg-white text-green-700 font-semibold rounded px-8 py-3 shadow border hover:bg-green-50 transition w-full md:w-auto">
             Shop Now
           </button>
-          <button className="bg-transparent text-white border border-white font-semibold rounded px-8 py-3 hover:bg-white hover:text-green-700 transition">
+          <button className="bg-transparent text-white border border-white font-semibold rounded px-8 py-3 hover:bg-white hover:text-green-700 transition w-full md:w-auto">
             Learn More
           </button>
         </div>
-        <div className="flex space-x-12 mt-12">
+        <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-12 mt-12">
           <div className="text-white flex items-center space-x-2">
             <ShieldCheck className="h-6 w-6 text-white" />
             <span>100% Organic</span>

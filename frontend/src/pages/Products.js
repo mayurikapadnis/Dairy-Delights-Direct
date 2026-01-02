@@ -38,36 +38,40 @@ function Products() {
   return (
     <>
       <Navbar />
-      <div className="bg-gray-50 pb-8 min-h-screen">
+      <div className="bg-gray-50 pb-8 min-h-screen px-4 md:px-0">
         <div className="max-w-5xl mx-auto">
-          <h2 className="text-3xl font-bold text-center pt-12 mb-2">Our Products</h2>
-          <form className="flex justify-center mb-4" onSubmit={handleSearch}>
+          <h2 className="text-3xl font-bold text-center pt-12 mb-6">Our Products</h2>
+          <form className="flex flex-col md:flex-row justify-center mb-8 gap-3 md:gap-0" onSubmit={handleSearch}>
             <input
               type="text"
               value={searchInput}
               onChange={e => setSearchInput(e.target.value)}
               placeholder="Search for dairy products..."
-              className="bg-white px-6 py-3 rounded shadow w-full md:w-1/2"
+              className="bg-white px-6 py-3 rounded-lg shadow w-full md:w-1/2 focus:outline-none focus:ring-2 focus:ring-green-500 transition"
             />
             <button
               type="submit"
-              className="ml-2 bg-green-600 px-5 py-3 text-white rounded hover:bg-green-700 font-semibold"
+              className="bg-green-600 px-8 py-3 text-white rounded-lg hover:bg-green-700 font-semibold shadow md:ml-2 transition transform active:scale-95"
             >
               Search
             </button>
           </form>
-          <div className="flex flex-wrap justify-center gap-2 mb-6">
-            {categoryList.map(cat => (
-              <button
-                key={cat}
-                onClick={() => setCategory(cat)}
-                className={`px-4 py-2 rounded-full border text-sm ${
-                  category === cat ? "bg-green-600 text-white" : "bg-white text-gray-700"
-                }`}
-              >
-                {cat}
-              </button>
-            ))}
+
+          <div className="mb-8 overflow-x-auto pb-2 scrollbar-hide">
+            <div className="flex flex-wrap justify-center gap-2 min-w-max px-2">
+              {categoryList.map(cat => (
+                <button
+                  key={cat}
+                  onClick={() => setCategory(cat)}
+                  className={`px-5 py-2 rounded-full border text-sm font-medium transition-colors duration-200 ${category === cat
+                      ? "bg-green-600 text-white border-green-600 shadow-md"
+                      : "bg-white text-gray-600 border-gray-200 hover:border-green-400 hover:text-green-600"
+                    }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
           </div>
           <ProductGrid products={filtered} />
         </div>
