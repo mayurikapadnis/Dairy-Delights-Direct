@@ -101,7 +101,16 @@ const Cart = () => {
                     <span className="text-lg font-bold">Total</span>
                     <span className="text-2xl font-bold text-green-700">₹{total}</span>
                   </div>
-                  <button className="w-full bg-green-600 text-white mt-8 py-4 rounded-lg font-bold hover:bg-green-700 transition flex items-center justify-center shadow-lg hover:shadow-xl transform active:scale-95 duration-150">
+                  <button
+                    onClick={() => {
+                      const userInfo = localStorage.getItem('userInfo'); // Basic auth check
+                      if (userInfo) {
+                        window.location.href = '/shipping';
+                      } else {
+                        window.location.href = '/login?redirect=shipping';
+                      }
+                    }}
+                    className="w-full bg-green-600 text-white mt-8 py-4 rounded-lg font-bold hover:bg-green-700 transition flex items-center justify-center shadow-lg hover:shadow-xl transform active:scale-95 duration-150">
                     Proceed to Checkout
                     <ArrowRight className="ml-2 w-5 h-5" />
                   </button>

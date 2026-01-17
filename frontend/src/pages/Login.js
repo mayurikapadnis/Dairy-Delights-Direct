@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import { useAuth } from '../context/AuthContext';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
@@ -21,14 +22,21 @@ function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+  const { login } = useAuth(); // Get login function
 
   async function handleSubmit(e) {
     e.preventDefault();
     try {
       const data = await loginUser({ email, password });
-      // Optionally store the token, then redirect
-      // localStorage.setItem('token', data.token); // Uncomment if you want persistent auth
-      navigate('/'); // Redirect to home, or use `/products` for product page
+
+      // Update global auth state
+      login(data);
+
+      // Check for redirect param
+      const params = new URLSearchParams(window.location.search);
+      const redirect = params.get('redirect') || '/';
+
+      navigate(redirect);
     } catch (err) {
       alert(err.message);
     }

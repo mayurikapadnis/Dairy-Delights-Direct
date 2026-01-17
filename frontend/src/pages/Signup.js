@@ -22,13 +22,16 @@ function Signup() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+  const [showSuccess, setShowSuccess] = useState(false);
 
   async function handleSubmit(e) {
     e.preventDefault();
     try {
-      const data = await registerUser({ name, email, password });
-      // Optionally: localStorage.setItem('token', data.token);
-      navigate('/'); // change to '/products' if you want after signup
+      await registerUser({ name, email, password });
+      setShowSuccess(true);
+      setTimeout(() => {
+        navigate('/login');
+      }, 2000);
     } catch (err) {
       alert(err.message);
     }
@@ -37,7 +40,21 @@ function Signup() {
   return (
     <>
       <Navbar />
-      <div className="flex flex-col items-center py-20 bg-gray-50 min-h-screen">
+      <div className="flex flex-col items-center py-20 bg-gray-50 min-h-screen relative">
+        {showSuccess && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+            <div className="bg-white p-8 rounded-lg shadow-xl flex flex-col items-center animate-bounce-in">
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
+                <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold text-gray-800 mb-2">Registration Successful!</h3>
+              <p className="text-gray-600">Redirecting to login...</p>
+            </div>
+          </div>
+        )}
+
         <div className="bg-white rounded p-10 shadow-lg w-full max-w-md">
           <div className="flex space-x-2 mb-8">
             <button
