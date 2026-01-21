@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { ShoppingCart } from "lucide-react";
 
@@ -6,7 +7,8 @@ function ProductGrid({ products }) {
   const { addToCart } = useCart();
   const [addedProductName, setAddedProductName] = useState("");
 
-  const handleAddToCart = product => {
+  const handleAddToCart = (e, product) => {
+    e.preventDefault(); // Prevent navigation when clicking add to cart
     addToCart(product);
     setAddedProductName(product.name);
 
@@ -18,18 +20,22 @@ function ProductGrid({ products }) {
     <>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 px-6 md:px-8 py-8">
         {products.map(product => (
-          <div key={product.id} className="bg-white rounded-lg shadow hover:shadow-lg transition flex flex-col">
+          <Link
+            key={product.id}
+            to={`/product/${product.id}`}
+            className="bg-white rounded-lg shadow hover:shadow-lg transition flex flex-col"
+          >
             <img
               src={product.image}
               alt={product.name}
               className="h-48 w-full object-cover rounded-t-lg"
             />
-            <div className="p-4">
-              <span className="block mb-1 px-2 py-1 rounded bg-green-100 text-green-700 text-xs">
+            <div className="p-4 flex flex-col flex-grow">
+              <span className="block mb-1 px-2 py-1 rounded bg-green-100 text-green-700 text-xs w-fit">
                 {product.category}
               </span>
               <h3 className="font-bold text-lg mb-1">{product.name}</h3>
-              <p className="text-gray-600 mb-2">{product.description}</p>
+              <p className="text-gray-600 mb-2 text-sm line-clamp-2">{product.description}</p>
               <div className="flex items-center space-x-2 mb-1">
                 <span className="text-green-700 font-bold text-xl">₹{product.price}</span>
                 {product.oldPrice && (
@@ -37,7 +43,7 @@ function ProductGrid({ products }) {
                 )}
               </div>
               {product.discount && (
-                <span className="text-xs bg-red-500 text-white px-2 py-1 rounded">
+                <span className="text-xs bg-red-500 text-white px-2 py-1 rounded w-fit">
                   {product.discount}
                 </span>
               )}
@@ -52,20 +58,20 @@ function ProductGrid({ products }) {
                 <span className="text-gray-600 ml-2 text-xs">({product.reviews} reviews)</span>
               </div>
               <button
-                className="w-full bg-green-600 text-white py-2 rounded mt-2 flex items-center justify-center space-x-2 hover:bg-green-700"
-                onClick={() => handleAddToCart(product)}
+                className="w-full bg-green-600 text-white py-2 rounded mt-auto flex items-center justify-center space-x-2 hover:bg-green-700"
+                onClick={(e) => handleAddToCart(e, product)}
               >
                 <ShoppingCart className="h-5 w-5" />
                 <span>Add to Cart</span>
               </button>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
 
       {/* Popup notification */}
       {addedProductName && (
-        <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-green-600 text-white px-6 py-3 rounded shadow-lg transition-opacity">
+        <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-green-600 text-white px-6 py-3 rounded shadow-lg transition-opacity z-50">
           Added "{addedProductName}" to cart!
         </div>
       )}

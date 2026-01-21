@@ -74,9 +74,13 @@ function Shipping() {
             alert('Please select a delivery address');
             return;
         }
-        // Navigate to payment or order placement
-        alert('Proceeding to Payment with address ID: ' + selectedAddress);
-        // navigate('/payment'); 
+
+        // Find the full address object
+        const addressToSave = addresses.find(addr => addr._id === selectedAddress);
+        if (addressToSave) {
+            localStorage.setItem('shippingAddress', JSON.stringify(addressToSave));
+            navigate('/payment');
+        }
     };
 
     return (
