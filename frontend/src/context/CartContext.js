@@ -5,14 +5,26 @@ const CartContext = createContext();
 export const useCart = () => useContext(CartContext);
 
 export const CartProvider = ({ children }) => {
+  // Get user-specific cart key
+  const getCartKey = () => {
+    const userInfo = localStorage.getItem('userInfo');
+    if (userInfo) {
+      const user = JSON.parse(userInfo);
+      return `cartItems_${user._id || user.email}`; // Use user ID or email as unique identifier
+    }
+    return 'cartItems_guest'; // Fallback for non-logged-in users
+  };
+
   const [cartItems, setCartItems] = useState(() => {
-    const savedCart = localStorage.getItem('cartItems');
+    const cartKey = getCartKey();
+    const savedCart = localStorage.getItem(cartKey);
     return savedCart ? JSON.parse(savedCart) : [];
   });
 
   // Save to localStorage whenever cartItems changes
   React.useEffect(() => {
-    localStorage.setItem('cartItems', JSON.stringify(cartItems));
+    const cartKey = getCartKey();
+    localStorage.setItem(cartKey, JSON.stringify(cartItems));
   }, [cartItems]);
 
   const addToCart = (product) => {

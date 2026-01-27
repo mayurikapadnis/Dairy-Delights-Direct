@@ -64,4 +64,57 @@ const addAddress = asyncHandler(async (req, res) => {
     }
 });
 
-export { getUserProfile, updateUserProfile, addAddress };
+// @desc    Update address
+// @route   PUT /api/users/address/:id
+// @access  Private
+const updateAddress = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.user._id);
+
+    if (user) {
+        const addressIndex = user.addresses.findIndex(
+            addr => addr._id.toString() === req.params.id
+        );
+
+        if (addressIndex !== -1) {
+            user.addresses[addressIndex] = {
+                ...user.addresses[addressIndex].toObject(),
+                ...req.body
+            };
+            await user.save();
+            res.json(user.addresses);
+        } else {
+            res.status(404);
+            throw new Error('Address not found');
+        }
+    } else {
+        res.status(404);
+        throw new Error('User not found');
+    }
+});
+
+// @desc    Delete address
+// @route   DELETE /api/users/address/:id
+// @access  Private
+const deleteAddress = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.user._id);
+
+    if (user) {
+        const addressIndex = user.addresses.findIndex(
+            addr => addr._id.toString() === req.params.id
+        );
+
+        if (addressIndex !== -1) {
+            user.addresses.splice(addressIndex, 1);
+            await user.save();
+            res.json(user.addresses);
+        } else {
+            res.status(404);
+            throw new Error('Address not found');
+        }
+    } else {
+        res.status(404);
+        throw new Error('User not found');
+    }
+});
+
+export { getUserProfile, updateUserProfile, addAddress, updateAddress, deleteAddress };

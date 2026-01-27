@@ -3,8 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { useCart } from '../context/CartContext';
+import { Star, Check, Truck, RefreshCw, Shield } from 'lucide-react';
 import products from '../data/products';
-import { Star, Truck, RefreshCw, Shield, Check } from 'lucide-react';
 
 const ProductDetails = () => {
     const { id } = useParams();
@@ -13,7 +13,22 @@ const ProductDetails = () => {
     const [quantity, setQuantity] = useState(1);
     const [showAddedMessage, setShowAddedMessage] = useState(false);
 
+    // Find product from local data
     const product = products.find(p => p.id === parseInt(id));
+
+
+    const handleAddToCart = () => {
+        for (let i = 0; i < quantity; i++) {
+            addToCart(product);
+        }
+        setShowAddedMessage(true);
+        setTimeout(() => setShowAddedMessage(false), 3000);
+    };
+
+    const handleBuyNow = () => {
+        handleAddToCart();
+        navigate('/cart');
+    };
 
     if (!product) {
         return (
@@ -21,9 +36,12 @@ const ProductDetails = () => {
                 <Navbar />
                 <div className="min-h-screen flex items-center justify-center">
                     <div className="text-center">
-                        <h2 className="text-2xl font-bold text-gray-800">Product not found</h2>
-                        <button onClick={() => navigate('/products')} className="mt-4 text-green-600 hover:underline">
-                            Return to Products
+                        <h2 className="text-2xl font-bold text-gray-800 mb-4">Product not found</h2>
+                        <button
+                            onClick={() => navigate('/products')}
+                            className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                        >
+                            Back to Products
                         </button>
                     </div>
                 </div>
@@ -31,19 +49,6 @@ const ProductDetails = () => {
             </>
         );
     }
-
-    const handleAddToCart = () => {
-        for (let i = 0; i < quantity; i++) {
-            addToCart(product);
-        }
-        setShowAddedMessage(true);
-        setTimeout(() => setShowAddedMessage(false), 2000);
-    };
-
-    const handleBuyNow = () => {
-        handleAddToCart();
-        navigate('/cart');
-    };
 
     return (
         <>
@@ -71,7 +76,7 @@ const ProductDetails = () => {
                                 />
                                 {product.discount && (
                                     <span className="absolute top-4 left-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">
-                                        {product.discount}
+                                        {product.discount}%
                                     </span>
                                 )}
                             </div>
@@ -90,7 +95,7 @@ const ProductDetails = () => {
                                             />
                                         ))}
                                     </div>
-                                    <span className="ml-2 text-gray-600">({product.reviews} reviews)</span>
+                                    <span className="ml-2 text-gray-600">({product.reviews || 0} reviews)</span>
                                 </div>
 
                                 {/* Price */}
@@ -185,98 +190,156 @@ const ProductDetails = () => {
 
                     {/* Product Specifications */}
                     <div className="bg-white rounded-lg shadow-sm p-8 mb-8">
-                        <h2 className="text-2xl font-bold text-gray-800 mb-6">Product Specifications</h2>
+                        <h2 className="text-2xl font-bold text-gray-800 mb-6">Product Details</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div className="border-b pb-3">
-                                <span className="font-semibold text-gray-700">Category:</span>
-                                <span className="ml-2 text-gray-600">{product.category}</span>
+                            <div className="flex justify-between py-2 border-b">
+                                <span className="font-medium text-gray-700">Category</span>
+                                <span className="text-gray-600">{product.category}</span>
                             </div>
-                            <div className="border-b pb-3">
-                                <span className="font-semibold text-gray-700">Brand:</span>
-                                <span className="ml-2 text-gray-600">FreshDairy</span>
-                            </div>
-                            <div className="border-b pb-3">
-                                <span className="font-semibold text-gray-700">Storage:</span>
-                                <span className="ml-2 text-gray-600">Keep Refrigerated at 4°C</span>
-                            </div>
-                            <div className="border-b pb-3">
-                                <span className="font-semibold text-gray-700">Shelf Life:</span>
-                                <span className="ml-2 text-gray-600">3-5 days from delivery</span>
-                            </div>
-                            <div className="border-b pb-3">
-                                <span className="font-semibold text-gray-700">Packaging:</span>
-                                <span className="ml-2 text-gray-600">Food-grade plastic bottle</span>
-                            </div>
-                            <div className="border-b pb-3">
-                                <span className="font-semibold text-gray-700">Origin:</span>
-                                <span className="ml-2 text-gray-600">Local Dairy Farms</span>
+                            <div className="flex justify-between py-2 border-b">
+                                <span className="font-medium text-gray-700">Brand</span>
+                                <span className="text-gray-600">Fresh Dairy</span>
                             </div>
                         </div>
                     </div>
 
-                    {/* Customer Reviews */}
+                    {/* Ratings & Reviews Section */}
                     <div className="bg-white rounded-lg shadow-sm p-8">
                         <h2 className="text-2xl font-bold text-gray-800 mb-6">Customer Reviews</h2>
 
-                        {/* Review Summary */}
-                        <div className="flex items-center mb-8 pb-8 border-b">
-                            <div className="text-center pr-8 border-r">
-                                <div className="text-5xl font-bold text-gray-800">{product.rating}.0</div>
-                                <div className="flex items-center justify-center mt-2">
+                        {/* Ratings Summary */}
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 pb-8 border-b">
+                            {/* Overall Rating */}
+                            <div className="text-center">
+                                <div className="text-5xl font-bold text-gray-800 mb-2">{product.rating}.0</div>
+                                <div className="flex items-center justify-center mb-2">
                                     {[...Array(5)].map((_, i) => (
                                         <Star
                                             key={i}
-                                            className={`w-5 h-5 ${i < product.rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}`}
+                                            className={`w-6 h-6 ${i < product.rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}`}
                                         />
                                     ))}
                                 </div>
-                                <p className="text-sm text-gray-500 mt-2">{product.reviews} ratings</p>
+                                <p className="text-gray-600">{product.reviews || 0} Reviews</p>
                             </div>
-                            <div className="pl-8 flex-1">
-                                {[5, 4, 3, 2, 1].map((star) => (
-                                    <div key={star} className="flex items-center mb-2">
-                                        <span className="text-sm w-12">{star} ★</span>
-                                        <div className="flex-1 bg-gray-200 h-2 rounded-full mx-3">
-                                            <div
-                                                className="bg-yellow-400 h-2 rounded-full"
-                                                style={{ width: `${star === product.rating ? '70%' : star === product.rating - 1 ? '20%' : '5%'}` }}
-                                            ></div>
+
+                            {/* Rating Breakdown */}
+                            <div className="md:col-span-2 space-y-2">
+                                {[5, 4, 3, 2, 1].map(stars => {
+                                    const percentage = stars === product.rating ? 75 : stars === product.rating - 1 ? 15 : 5;
+                                    return (
+                                        <div key={stars} className="flex items-center space-x-3">
+                                            <span className="text-sm text-gray-600 w-8">{stars} ★</span>
+                                            <div className="flex-1 bg-gray-200 rounded-full h-2">
+                                                <div
+                                                    className="bg-yellow-400 h-2 rounded-full"
+                                                    style={{ width: `${percentage}%` }}
+                                                ></div>
+                                            </div>
+                                            <span className="text-sm text-gray-600 w-12">{percentage}%</span>
                                         </div>
-                                        <span className="text-sm text-gray-600 w-12">
-                                            {star === product.rating ? Math.floor(product.reviews * 0.7) : star === product.rating - 1 ? Math.floor(product.reviews * 0.2) : Math.floor(product.reviews * 0.05)}
-                                        </span>
-                                    </div>
-                                ))}
+                                    );
+                                })}
                             </div>
                         </div>
 
-                        {/* Sample Reviews */}
+                        {/* Individual Reviews */}
                         <div className="space-y-6">
+                            {/* Review 1 */}
                             <div className="border-b pb-6">
-                                <div className="flex items-center mb-2">
-                                    <div className="flex">
-                                        {[...Array(5)].map((_, i) => (
-                                            <Star key={i} className="w-4 h-4 text-yellow-400 fill-yellow-400" />
-                                        ))}
+                                <div className="flex items-start justify-between mb-3">
+                                    <div>
+                                        <div className="flex items-center space-x-2 mb-1">
+                                            <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-green-700 font-bold">
+                                                A
+                                            </div>
+                                            <div>
+                                                <h4 className="font-bold text-gray-800">Ananya Sharma</h4>
+                                                <p className="text-xs text-gray-500">Verified Purchase</p>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <span className="ml-2 font-semibold text-gray-800">Excellent Product!</span>
+                                    <span className="text-sm text-gray-500">2 days ago</span>
                                 </div>
-                                <p className="text-gray-600 mb-2">Very fresh and high quality. Delivery was prompt and packaging was great.</p>
-                                <p className="text-sm text-gray-500">- Verified Purchase</p>
+                                <div className="flex items-center mb-2">
+                                    {[...Array(5)].map((_, i) => (
+                                        <Star
+                                            key={i}
+                                            className={`w-4 h-4 ${i < 5 ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}`}
+                                        />
+                                    ))}
+                                </div>
+                                <p className="text-gray-700 leading-relaxed">
+                                    Excellent quality! The {product.name.toLowerCase()} is fresh and tastes amazing.
+                                    Packaging was perfect and delivery was on time. Highly recommend!
+                                </p>
                             </div>
+
+                            {/* Review 2 */}
                             <div className="border-b pb-6">
-                                <div className="flex items-center mb-2">
-                                    <div className="flex">
-                                        {[...Array(4)].map((_, i) => (
-                                            <Star key={i} className="w-4 h-4 text-yellow-400 fill-yellow-400" />
-                                        ))}
-                                        <Star className="w-4 h-4 text-gray-300" />
+                                <div className="flex items-start justify-between mb-3">
+                                    <div>
+                                        <div className="flex items-center space-x-2 mb-1">
+                                            <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-700 font-bold">
+                                                R
+                                            </div>
+                                            <div>
+                                                <h4 className="font-bold text-gray-800">Rohan Patel</h4>
+                                                <p className="text-xs text-gray-500">Verified Purchase</p>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <span className="ml-2 font-semibold text-gray-800">Good Quality</span>
+                                    <span className="text-sm text-gray-500">1 week ago</span>
                                 </div>
-                                <p className="text-gray-600 mb-2">Tastes great and kids love it. Would recommend!</p>
-                                <p className="text-sm text-gray-500">- Verified Purchase</p>
+                                <div className="flex items-center mb-2">
+                                    {[...Array(5)].map((_, i) => (
+                                        <Star
+                                            key={i}
+                                            className={`w-4 h-4 ${i < 4 ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}`}
+                                        />
+                                    ))}
+                                </div>
+                                <p className="text-gray-700 leading-relaxed">
+                                    Good product overall. Fresh and reasonably priced. Would have given 5 stars if the delivery was a bit faster.
+                                </p>
                             </div>
+
+                            {/* Review 3 */}
+                            <div className="pb-6">
+                                <div className="flex items-start justify-between mb-3">
+                                    <div>
+                                        <div className="flex items-center space-x-2 mb-1">
+                                            <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center text-purple-700 font-bold">
+                                                P
+                                            </div>
+                                            <div>
+                                                <h4 className="font-bold text-gray-800">Priya Desai</h4>
+                                                <p className="text-xs text-gray-500">Verified Purchase</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <span className="text-sm text-gray-500">2 weeks ago</span>
+                                </div>
+                                <div className="flex items-center mb-2">
+                                    {[...Array(5)].map((_, i) => (
+                                        <Star
+                                            key={i}
+                                            className={`w-4 h-4 ${i < 5 ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}`}
+                                        />
+                                    ))}
+                                </div>
+                                <p className="text-gray-700 leading-relaxed">
+                                    Best quality dairy products! Been ordering for months now. Always fresh, always delivered on time.
+                                    Customer service is also very responsive. Keep up the great work!
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* Write Review Button */}
+                        <div className="mt-6 pt-6 border-t">
+                            <button className="px-6 py-3 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition">
+                                Write a Review
+                            </button>
                         </div>
                     </div>
                 </div>
